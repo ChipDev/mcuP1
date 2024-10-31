@@ -147,13 +147,21 @@ int main(void)
 	  uint32_t keypad = lut[get_keypad_press()]; //converts to pressed value
 	  uint8_t pressed = 0;
 	  if(keypad >= 1 && keypad <= 5) {
+		  //1-5 sets the frequency.
+		  //debounce
 		  pressed = 1;
+		  //set frequency by scaling factor, which changes the array +=
 		  frequency_scaling_factor = keypad;
+		  //set square wave timings
 		  square_high_tim_delay = current_duty_cycle * LOW_FREQ_TIM_CYCLES / frequency_scaling_factor;
 		  square_low_tim_delay = (1 - current_duty_cycle) * LOW_FREQ_TIM_CYCLES / frequency_scaling_factor;
 	  }else if(keypad == 6) {
+		  //6, 7, 8 same function
+		  //devbounce
 		  pressed = 1;
+		  //set wave type
 		  wavetype = SINE_WAVE;
+		  //set lut pointer, which is used in ISR.
 		  wave_lut = sine_lut;
 	  }else if(keypad == 7) {
 		  pressed = 1;
@@ -167,8 +175,12 @@ int main(void)
 		  pressed = 1;
 		  wavetype = SQUARE_WAVE;
 	  }else if(keypad == 13) {
+		  //13, 14, 15 same functional qualities
+		  //debounce
 		  pressed = 1;
+		  //make sure duty cycle within 0.1 to 0.9 range; 13 reduces by 10%, 0 sets to 50%, 14 increases by 10%
 		  if(current_duty_cycle >= 0.2) current_duty_cycle -= 0.1;
+	          //set square wave timings
 		  square_high_tim_delay = current_duty_cycle * LOW_FREQ_TIM_CYCLES / frequency_scaling_factor;
 		  square_low_tim_delay = (1 - current_duty_cycle) * LOW_FREQ_TIM_CYCLES / frequency_scaling_factor;
 	  }else if(keypad == 14) {
